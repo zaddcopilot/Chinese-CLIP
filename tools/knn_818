@@ -1,0 +1,12 @@
+#!/bin/bash
+
+DATAPATH=/home/featurize/work
+    md=epoch2
+    split=valid # 指定计算valid或test集特征
+    dataset_name=railway
+    python -u /home/featurize/work/Chinese-CLIP/cn_clip/eval/make_topk_predictions.py \
+        --image-feats="${DATAPATH}/datasets/${dataset_name}/${md}_${split}.img_feat.jsonl"\
+        --text-feats="${DATAPATH}/datasets/${dataset_name}/${md}_${split}.txt_feat.jsonl" \
+        --top-k=10 \
+        --eval-batch-size=32768 \
+        --output="${DATAPATH}/datasets/${dataset_name}/${md}_${split}_predictions.jsonl"

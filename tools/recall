@@ -1,0 +1,32 @@
+#!/bin/bash
+declare -A md_cpt
+# md_cpt=( ["RN50"]="clip_cn_rn50.pt" ["ViT-B-16"]="clip_cn_vit-b-16.pt" ["ViT-H-14"]="clip_cn_vit-h-14.pt" ["ViT-L-14-336"]="clip_cn_vit-l-14-336.pt" ["ViT-L-14"]="clip_cn_vit-l-14.pt" )
+md_cpt=(  ["ViT-H-14"]="clip_cn_vit-h-14.pt" )
+# export CUDA_VISIBLE_DEVICES=0
+export PYTHONPATH=${PYTHONPATH}:/home/featurize/work/Chinese-CLIP/cn_clip
+
+DATAPATH=/home/featurize/work
+split=valid # 指定计算valid或test集特征
+dataset_name=railway
+cpt='clip_cn_rn50.pt  clip_cn_vit-b-16.pt  clip_cn_vit-h-14.pt  clip_cn_vit-l-14-336.pt  clip_cn_vit-l-14.pt'
+# models="ViT-B-32", "ViT-B-16", "ViT-L-14", "ViT-L-14-336", "ViT-H-14", "RN50"
+models='RN50 ViT-B-16 ViT-H-14 ViT-L-14-336 ViT-L-14'
+# md_cpt=(
+# 	'RN50::clip_cn_rn50.pt'
+# 	'ViT-B-16::clip_cn_vit-b-16.pt'
+# 	'ViT-H-14::clip_cn_vit-h-14.pt'
+# 	'ViT-L-14-336::clip_cn_vit-l-14-336.pt'
+# 	'ViT-L-14::clip_cn_vit-l-14.pt'
+# )
+
+for index in "${!md_cpt[@]}"; do
+	# md="${index%%::*}"
+	# pt="${index##*::}"
+    md=$index
+    pt=${md_cpt[$md]}
+    resume=${DATAPATH}/pretrained_weights/$pt
+    python /home/featurize/work/Chinese-CLIP/cn_clip/eval/evaluation.py \
+        ${DATAPATH}/datasets/${dataset_name}/${split}_texts.jsonl \
+        ${DATAPATH}/datasets/${dataset_name}/${md}_${split}_predictions.jsonl \
+        ${md}_${split}_output.json
+done

@@ -153,5 +153,6 @@ if __name__=="__main__":
         report_score(r1, r5, r10, out_path)
         print("The evaluation finished successfully.")
     except Exception as e:
+        print(e)
         report_error_msg(e.args[0], e.args[0], out_path)
         print("The evaluation failed: {}".format(e.args[0]))

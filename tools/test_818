@@ -22,12 +22,11 @@ models='RN50 ViT-B-16 ViT-H-14 ViT-L-14-336 ViT-L-14'
 
 
 
-for index in "${!md_cpt[@]}"; do
 	# md="${index%%::*}"
 	# pt="${index##*::}"
-	md=$index
-	pt=${md_cpt[$md]}
-  resume=${DATAPATH}/pretrained_weights/$pt
+	md=epoch2
+	pt=epoch2.pt
+  resume=/home/featurize/data/experiments/muge_finetune_vit-l-14-336_roberta-base_bs128_1gpu/checkpoints/$pt
  	python -u /home/featurize/work/Chinese-CLIP/cn_clip/eval/extract_features.py \
      --extract-image-feats \
      --extract-text-feats \
@@ -37,9 +36,8 @@ for index in "${!md_cpt[@]}"; do
      --text-batch-size=32 \
      --context-length=52 \
      --resume=${resume} \
-     --vision-model=$md \
-     --text-model=RoBERTa-wwm-ext-large-chinese \
+     --vision-model=ViT-L-14-336 \
+     --text-model=RoBERTa-wwm-ext-base-chinese \
  	  --image-feat-output-path="${DATAPATH}/datasets/${dataset_name}/${md}_${split}.img_feat.jsonl"\
  	  --text-feat-output-path="${DATAPATH}/datasets/${dataset_name}/${md}_${split}.txt_feat.jsonl"
 	 
-	done
